@@ -11,9 +11,9 @@ pipeline {
                  sh ' terraform init '
              }
          }
-         stage ("two") {
+         stage ("one") {
              steps {
-                 echo 'this is step two'
+                 echo 'this is step one'
              }
          }
     }
