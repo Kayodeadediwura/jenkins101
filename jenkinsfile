@@ -6,14 +6,15 @@ pipeline {
      }
     
     stages {
-         stage ("initialise terraform") {
+         stage ('First stage') {
              steps {
-                 sh ' terraform init '
+                 echo 'thi is stage one'
              }
          }
-         stage ("one") {
+         stage ('second stage') {
              steps {
-                 echo 'this is step one'
+                 echo 'this is stage one'
+                 echo 'it is the second stage'
              }
          }
     }
