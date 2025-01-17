@@ -1,21 +1,39 @@
 pipeline {
-    agent any
+    agent any 
     environment {
-         AWS_SECRET_ACCESS_KEY = credentiails ('AWS_SECRET_ACCESS_KEY')
-         AWS_ACCESS_KEY_ID = credentials ('AWS_ACCESS_KEY_ID')
-     }
-    
-    stages {
-         stage ('Initialise terraform') {
-             steps {
-                 sh 'terraform init'
-             }
-         }
-         stage ('second stage') {
-             steps {
-                 echo 'this is stage two'
-                 echo 'it is the second stage'
-             }
-         }
+        AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
+        AWS_ACCESS_KEY_ID =  credentials ('AWS_ACCESS_KEY_ID')
     }
-}
+
+        stages {
+             stage ('Notification') {
+            steps {
+                script {
+                    withCredentials ([string (credentialsId: 'SLACK_TOKEN', variable: 'SLACK_TOKEN')]) {
+
+                        sh """
+                          curl -X POST \
+                          -H 'Authorization: Bearer ${SLACK_TOKEN}' \
+                          -H 'Content-Type: application/json' \
+                          --data '{"channel": "devops-masterclass-2024","text" : "Hello, testing"}'  \
+                          https://slack.com//api/chat.postMessage 
+                        """
+                    }
+                }
+            }
+        }     
+    }
+    post {
+        success {
+            echo  "pipeline has succeeded"
+        }
+        failure  {
+            echo  "pipeline has succeeded"
+        }
+        always {
+            echo "always execute"
+        }
+        
+    }
+        
+    }
